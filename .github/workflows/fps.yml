@@ -1,0 +1,22 @@
+name: Build FPSHud
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          mkdir -p out
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          xcrun -sdk iphoneos clang -arch arm64 -miphoneos-version-min=14.0 -isysroot "$SDK" \
+            -fobjc-arc -dynamiclib -framework UIKit -framework Foundation \
+            -framework CoreGraphics -framework QuartzCore \
+            -install_name @rpath/FPSHud.dylib -o out/FPSHud.dylib FPSHud.m
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FPSHud
+          path: out/
