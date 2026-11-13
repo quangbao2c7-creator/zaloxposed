@@ -1,0 +1,20 @@
+name: Build dylib
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip
+        run: unzip -o ZaloXposedNew.zip
+      - name: Build
+        run: |
+          cd ZaloXposedNew
+          chmod +x build.sh
+          ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZaloXposed
+          path: ZaloXposedNew/build/
